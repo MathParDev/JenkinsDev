@@ -6,6 +6,8 @@ Those sources include:
 
 ## Shared library 
 Shared library sources are contained within folders `resources`, `src` and `vars`.
+Pipelines in repository are using this shared library under the name `utils`.
+More details about shared pipelines in Jenkins available in the official [docs](https://jenkins.io/doc/book/pipeline/shared-libraries/)
 
 ## Pipelines
 Available declarative pipelines:
