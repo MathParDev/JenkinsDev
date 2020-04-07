@@ -1,5 +1,5 @@
 def getList(){
-    return ['AccountService', 'SchoolService', 'GatewayService', 'SecretManager'];
+    return ['AccountService', 'SchoolService', 'GatewayService', 'TasksService', 'SecretManager'];
 }
 
 def getSourceUrl(String application){
@@ -7,6 +7,7 @@ def getSourceUrl(String application){
             'AccountService': 'https://github.com/MathparLearningTeam/Account',
             'SchoolService': 'https://github.com/MathparLearningTeam/School',
             'GatewayService': 'https://github.com/MathparLearningTeam/Gateway',
+            'TasksService': 'https://github.com/MathparLearningTeam/Tasks',
             'SecretManager': 'https://github.com/MathparLearningTeam/SecretManager'
     ]
     return sources.get(application)
@@ -17,6 +18,7 @@ def getDeploymentScriptPath(String application){
             'AccountService': 'applications/account',
             'SchoolService': 'applications/school',
             'GatewayService': 'applications/gateway',
+            'TasksService': 'applications/tasks',
             'SecretManager': 'applications/secret-manager'
     ].get(application)
 }
