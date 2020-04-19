@@ -4,7 +4,7 @@ pipeline {
     agent {
         docker {
             image 'oleksiiretiznyk/maven-npm:latest'
-            args '-u 0'
+            args '-u 0 -v $HOME/.m2:/root/.m2'
         }
     }
     stages {
