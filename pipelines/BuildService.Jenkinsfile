@@ -10,7 +10,13 @@ pipeline {
                 description: 'Application to build an image and push to registry'
         )
     }
-    agent any
+    agent {
+        docker {
+            image 'maven:3-jdk-11'
+            args '-u 0 -v $HOME/.m2:/root/.m2'
+            reuseNode true
+        }
+    }
     stages {
         stage('Checkout') {
             steps{
@@ -20,13 +26,6 @@ pipeline {
         stage('Build artifact'){
             environment {
                 GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
-            }
-            agent {
-                docker {
-                    image 'maven:3-jdk-11'
-                    args '-u 0 -v $HOME/.m2:/root/.m2'
-                    reuseNode true
-                }
             }
             steps{
                 sh 'git config --global user.email "mathpar.mailer@gmail.com"'
@@ -39,7 +38,7 @@ pipeline {
     //Required to cleanup the checkout as it is happening outside of container
     post {
         always {
-            sh "sudo chmod -R 777 ."
+            sh "chmod -R 777 ."
             cleanWs()
         }
     }

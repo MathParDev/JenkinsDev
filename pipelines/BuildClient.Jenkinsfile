@@ -25,7 +25,7 @@ pipeline {
     //Required to cleanup the checkout as it is happening outside of container
     post {
         always {
-            sh "sudo chmod -R 777 ."
+            sh "chmod -R 777 ."
             cleanWs()
         }
     }
