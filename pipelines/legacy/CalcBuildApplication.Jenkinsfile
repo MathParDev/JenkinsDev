@@ -48,8 +48,8 @@ pipeline {
             steps{
                 script {
                     withDockerRegistry(credentialsId: 'Gitlab-Web-Key', url: 'https://registry.gitlab.com') {
-                        sh "docker build -t registry.gitlab.com/mathpar/mathpar/${params.imageName} ."
-                        sh "docker push registry.gitlab.com/mathpar/mathpar/${params.imageName}"
+                        sh "docker build -t registry.gitlab.com/mathpar/learning/${params.imageName} ."
+                        sh "docker push registry.gitlab.com/mathpar/learning/${params.imageName}"
                     }
                 }
             }
