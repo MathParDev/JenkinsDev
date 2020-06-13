@@ -5,7 +5,7 @@ def getList(){
 def getShortName(String fullName){
     return [
             'mathpar.ukma.edu.ua': 'ukma',
-            'mathpar.com': 'mathpar.com'
+            'mathpar.com': 'mathpar'
     ].get(fullName)
 }
 
