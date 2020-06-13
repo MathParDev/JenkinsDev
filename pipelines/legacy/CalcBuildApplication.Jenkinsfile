@@ -1,9 +1,3 @@
-@Library('utils')
-import mathpar.jenkins.utils.Constants
-
-def fullImageName = "${Constants.buildGitlabImageNamePrefix()}/${params.imageName}"
-
-
 pipeline {
     parameters{
         string(
@@ -18,29 +12,21 @@ pipeline {
         )
         string(
                 name: 'imageName',
-                defaultValue: 'mathpar:latest',
+                defaultValue: 'calc:latest',
                 description: "Name to give to docker image when created. Should include docker tag"
         )
-        booleanParam(name: 'deployToMUEU', defaultValue: true, description: 'Either to deploy new version on mathpar.ukma.edu.ua right after building image')
-    }
-    environment {
-        MAVEN_OPTS="-Duser.home=${JENKINS_HOME}"
     }
     agent {
         docker {
-            image 'registry.gitlab.com/mathpar/mathpar/maven_agent'
-            registryUrl Constants.buildGitlabRegistryUrl()
-            registryCredentialsId Constants.GitlabCredentialsId
-            //This property is required to run pipeline in admin mode so sshagent has authorities to create files
-            //And also to make sure that such user exists in passwd file (also required for sshagent)
-            args '-u 0'
+            image 'maven:3-jdk-11'
+            args '-u 0 -v $HOME/.m2:/root/.m2'
         }
     }
     stages {
         stage('setup') {
             steps{
                 script {
-                    git url: params.repoUrl, branch: params.branch, credentialsId: Constants.BitbucketCredentialsId
+                    git url: params.repoUrl, branch: params.branch, credentialsId: 'bitbucket-credentials'
                 }
             }
         }
@@ -61,19 +47,11 @@ pipeline {
         stage('docker'){
             steps{
                 script {
-                    withDockerRegistry(credentialsId: Constants.GitlabCredentialsId, url: Constants.buildGitlabRegistryUrl()) {
-                        sh "docker build -t ${fullImageName} ."
-                        sh "docker push ${fullImageName}"
+                    withDockerRegistry(credentialsId: 'bitbucket-credentials', url: 'https://registry.gitlab.com') {
+                        sh "docker build -t registry.gitlab.com/mathpar/mathpar/${params.imageName} ."
+                        sh "docker push registry.gitlab.com/mathpar/mathpar/${params.imageName}"
                     }
                 }
-            }
-        }
-        stage('deployToMUEU'){
-            when{
-                equals expected: true, actual: params.deployToMUEU
-            }
-            steps{
-                build job: 'DeployCalc', parameters: [string(name: 'fullImageName', value: fullImageName), string(name: 'dockerCredentialsId', value: Constants.GitlabCredentialsId), string(name: 'sshCredentialsId', value: Constants.MathparSshCredentialsId), string(name: 'sshAddress', value: 'mathpar@mathpar.ukma.edu.ua')]
             }
         }
     }
