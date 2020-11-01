@@ -1,0 +1,52 @@
+library 'utils'
+
+List<String> applicationChoices = applications.getList()
+List<String> environmentChoices = environments.getList()
+def status
+
+pipeline {
+    parameters {
+        choice(
+                name: 'application',
+                choices: applicationChoices,
+                description: 'Application to build an image and push to registry'
+        )
+        choice(
+                name: 'environment',
+                choices: environmentChoices,
+                description: 'Environment to deploy application to'
+        )
+    }
+    agent any
+    stages(){
+        stage('Check application'){
+            steps{
+                script{
+                    def answer = sh(script: "curl -s '${environments.getUrl(params.environment)}${applications.getMonitoringUrl(params.application)}'", returnStdout: true)
+                    echo "[INFO] Current application health status: ${answer}"
+                    status = readJSON text: answer
+                }
+            }
+        }
+        stage('Rebuild database'){
+            when{
+                expression { !status.databaseHealthy }
+            }
+            steps{
+                script{
+                    def databaseName = applications.getDatabaseName(params.application)
+                    if(databaseName)
+                        build job: "/Mathpar Learning/DeployDatabase", parameters: [[$class: "StringParameterValue", name: "infrastructure", value: databaseName], [$class: "StringParameterValue", name: "environment", value: params.environment]], wait: false
+                }
+            }
+        }
+        stage('Rebuild application'){
+            when{
+                expression { !status.applicationHealthy }
+            }
+            steps{
+                build job: "/Mathpar Learning/DeployApplication", parameters: [[$class: "StringParameterValue", name: "application", value: params.application], [$class: "StringParameterValue", name: "environment", value: params.environment], [$class: "StringParameterValue", name: "tag", value: "latest"]], wait: false
+            }
+        }
+    }
+}

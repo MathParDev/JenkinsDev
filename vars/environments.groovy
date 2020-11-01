@@ -23,3 +23,10 @@ def getHostString(String environment){
     ].get(environment)
 }
 
+def getUrl(String environment){
+    return [
+            'mathpar.ukma.edu.ua': 'http://mathpar.ukma.edu.ua',
+            'mathpar.com': 'http://mathpar.com'
+    ].get(environment)
+}
+
