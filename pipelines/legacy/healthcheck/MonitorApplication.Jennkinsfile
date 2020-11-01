@@ -16,7 +16,7 @@ pipeline {
         stage('Check application'){
             steps{
                 script{
-                    status = sh(script: "curl -I -o /dev/null -w '%{http_code}' '${environments.getUrl(params.environment)}'", returnStdout: true)
+                    status = sh(script: "curl -I -o /dev/null -w '%{http_code}' '${environments.getUrl(params.environment)}'", returnStdout: true) as Integer
                     echo "[INFO] Current application health status: ${status}"
                 }
             }

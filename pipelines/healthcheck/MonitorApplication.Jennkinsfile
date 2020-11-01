@@ -2,7 +2,7 @@ library 'utils'
 
 List<String> applicationChoices = applications.getList()
 List<String> environmentChoices = environments.getList()
-def status
+def status, httpStatus
 
 pipeline {
     parameters {
@@ -22,15 +22,18 @@ pipeline {
         stage('Check application'){
             steps{
                 script{
-                    def answer = sh(script: "curl -s '${environments.getUrl(params.environment)}${applications.getMonitoringUrl(params.application)}'", returnStdout: true)
-                    echo "[INFO] Current application health status: ${answer}"
-                    status = readJSON text: answer
+                    httpStatus = sh(script: "curl -I -o /dev/null -w '%{http_code}' '${environments.getUrl(params.environment)}${applications.getMonitoringUrl(params.application)}'", returnStdout: true) as Integer
+                    if(httpStatus<400){
+                        def answer = sh(script: "curl -s '${environments.getUrl(params.environment)}${applications.getMonitoringUrl(params.application)}'", returnStdout: true)
+                        status = readJSON text: answer
+                    }
+                    echo "[INFO] Current application health status: [${httpStatus}] ${status}"
                 }
             }
         }
         stage('Redeploy database'){
             when{
-                expression { !status.databaseHealthy }
+                expression { httpStatus>=400 || !status.databaseHealthy }
             }
             steps{
                 script{
@@ -42,7 +45,7 @@ pipeline {
         }
         stage('Redeploy application'){
             when{
-                expression { !status.applicationHealthy }
+                expression { httpStatus>=400 || !status.applicationHealthy }
             }
             steps{
                 build job: "/Mathpar Learning/DeployApplication", parameters: [[$class: "StringParameterValue", name: "application", value: params.application], [$class: "StringParameterValue", name: "environment", value: params.environment], [$class: "StringParameterValue", name: "tag", value: "latest"]]
