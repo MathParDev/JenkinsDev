@@ -28,7 +28,7 @@ pipeline {
                 }
             }
         }
-        stage('Rebuild database'){
+        stage('Redeploy database'){
             when{
                 expression { !status.databaseHealthy }
             }
@@ -36,16 +36,16 @@ pipeline {
                 script{
                     def databaseName = applications.getDatabaseName(params.application)
                     if(databaseName)
-                        build job: "/Mathpar Learning/DeployDatabase", parameters: [[$class: "StringParameterValue", name: "infrastructure", value: databaseName], [$class: "StringParameterValue", name: "environment", value: params.environment]], wait: false
+                        build job: "/Mathpar Learning/DeployDatabase", parameters: [[$class: "StringParameterValue", name: "infrastructure", value: databaseName], [$class: "StringParameterValue", name: "environment", value: params.environment]]
                 }
             }
         }
-        stage('Rebuild application'){
+        stage('Redeploy application'){
             when{
                 expression { !status.applicationHealthy }
             }
             steps{
-                build job: "/Mathpar Learning/DeployApplication", parameters: [[$class: "StringParameterValue", name: "application", value: params.application], [$class: "StringParameterValue", name: "environment", value: params.environment], [$class: "StringParameterValue", name: "tag", value: "latest"]], wait: false
+                build job: "/Mathpar Learning/DeployApplication", parameters: [[$class: "StringParameterValue", name: "application", value: params.application], [$class: "StringParameterValue", name: "environment", value: params.environment], [$class: "StringParameterValue", name: "tag", value: "latest"]]
             }
         }
     }

@@ -1,0 +1,33 @@
+library 'utils'
+
+List<String> environmentChoices = environments.getList()
+def status
+
+pipeline {
+    parameters {
+        choice(
+                name: 'environment',
+                choices: environmentChoices,
+                description: 'Environment to deploy application to'
+        )
+    }
+    agent any
+    stages(){
+        stage('Check application'){
+            steps{
+                script{
+                    status = sh(script: "curl -I -o /dev/null -w '%{http_code}' '${environments.getUrl(params.environment)}'", returnStdout: true)
+                    echo "[INFO] Current application health status: ${status}"
+                }
+            }
+        }
+        stage('Redeploy application'){
+            when{
+                expression { status >= 400 }
+            }
+            steps{
+                build job: "/Mathpar Calculator/DeployCalc", parameters: [[$class: "StringParameterValue", name: "imageName", value: "calc:latest"], [$class: "StringParameterValue", name: "environment", value: params.environment]]
+            }
+        }
+    }
+}
