@@ -2,6 +2,10 @@ def getList(){
     return ['AccountService', 'SchoolService', 'GatewayService', 'TasksService', 'SecretManager'];
 }
 
+def getMonitoredApplicationsList(){
+    return ['AccountService', 'SchoolService', 'GatewayService', 'TasksService'];
+}
+
 def getSourceUrl(String application){
     def sources = [
             'AccountService': 'https://github.com/MathparLearningTeam/Account',
