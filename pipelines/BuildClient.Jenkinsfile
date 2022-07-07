@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage('Prepare') {
             steps{
-                git url: 'https://github.com/MathParDev/ClientDev.git', branch: 'integration', credentialsId: 'github_sakh_mathpar'
+                git url: 'git@github.com:MathParDev/ClientDev.git', branch: 'integration', credentialsId: 'github_sakh_mathpar'
                 sh 'git config --global user.email "mathpar.mailer@gmail.com"'
                 sh 'git config --global user.name "Mathpar Jenkins"'
                 injectCredentials script:this, github: true
