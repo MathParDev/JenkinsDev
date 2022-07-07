@@ -13,7 +13,7 @@ pipeline {
                 git url: 'git@github.com:MathParDev/ClientDev.git', branch: 'integration', credentialsId: 'github_sakh_mathpar'
                 sh 'git config --global user.email "mathpar.mailer@gmail.com"'
                 sh 'git config --global user.name "Mathpar Jenkins"'
-                injectCredentials script:this, github: true
+                //injectCredentials script:this, github: true
             }
         }
         stage('Build artifact'){
