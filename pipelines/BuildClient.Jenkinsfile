@@ -27,6 +27,7 @@ pipeline {
         stage('Push to master'){
             steps{
                 sshagent(credentials:["github_sakh_mathpar"]) {
+                    sh "git pull origin master"
                     sh "git push origin HEAD:master"
                 }
             }
