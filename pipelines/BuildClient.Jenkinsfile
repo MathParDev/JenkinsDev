@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Prepare') {
             steps{
-                git url: 'https://github.com/MathparLearningTeam/Client', branch: 'integration', credentialsId: 'Github-Web-Key'
+                git url: 'https://github.com/MathParDev/ClientDev', branch: 'integration', credentialsId: 'github_sakh_mathpar'
                 sh 'git config --global user.email "mathpar.mailer@gmail.com"'
                 sh 'git config --global user.name "Mathpar Jenkins"'
                 injectCredentials script:this, github: true
@@ -23,7 +23,7 @@ pipeline {
         }
         stage('Push to master'){
             steps{
-                sshagent(credentials:["Github-Web-Key"]) {
+                sshagent(credentials:["github_sakh_mathpar"]) {
                     sh "git push origin HEAD:master"
                 }
             }
