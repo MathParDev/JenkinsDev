@@ -7,10 +7,13 @@ pipeline {
             args '-u 0 -v $HOME/.m2:/root/.m2'
         }
     }
+    environment {
+            GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+        }
     stages {
         stage('Prepare') {
             steps{
-                git url: 'git@github.com:MathParDev/ClientDev.git', branch: 'integration', credentialsId: 'github_sakh_mathpar'
+                git url: 'https://github.com/MathParDev/ClientDev.git', branch: 'integration', credentialsId: 'github_sakh_mathpar'
                 sh 'git config --global user.email "mathpar.mailer@gmail.com"'
                 sh 'git config --global user.name "Mathpar Jenkins"'
                 //injectCredentials script:this, github: true
