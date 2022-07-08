@@ -8,10 +8,10 @@ def getMonitoredApplicationsList(){
 
 def getSourceUrl(String application){
     def sources = [
-            'AccountService': 'git@github.com:MathparLearningTeam/Account.git',
-            'SchoolService': 'git@github.com:MathparLearningTeam/School.git',
+            'AccountService': 'git@github.com:MathParDev/AccountDev.git',
+            'SchoolService': 'git@github.com:MathParDev/SchoolDev.git',
             'GatewayService': 'git@github.com:MathParDev/GatewayDev.git',
-            'TasksService': 'git@github.com:MathparLearningTeam/Tasks.git',
+            'TasksService': 'git@github.com:MathParDev/TasksDev.git',
             'SecretManager': 'git@github.com:MathParDev/SecretManagerDev.git'
     ]
     return sources.get(application)
