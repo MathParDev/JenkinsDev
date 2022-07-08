@@ -10,9 +10,9 @@ def getSourceUrl(String application){
     def sources = [
             'AccountService': 'git@github.com:MathparLearningTeam/Account.git',
             'SchoolService': 'git@github.com:MathparLearningTeam/School.git',
-            'GatewayService': 'git@github.com:MathparLearningTeam/Gateway.git',
+            'GatewayService': 'git@github.com:MathParDev/GatewayDev.git',
             'TasksService': 'git@github.com:MathparLearningTeam/Tasks.git',
-            'SecretManager': 'git@github.com:MathparLearningTeam/SecretManager.git'
+            'SecretManager': 'git@github.com:MathParDev/SecretManagerDev.git'
     ]
     return sources.get(application)
 }

@@ -22,7 +22,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps{
-                git url: applications.getSourceUrl(params.application), branch: "integration", credentialsId: 'Github-Web-Key'
+                git url: applications.getSourceUrl(params.application), branch: "integration", credentialsId: 'github_sakh_mathpar'
             }
         }
         stage('Build artifact'){
@@ -35,7 +35,8 @@ pipeline {
         }
         stage('Push to master'){
             steps{
-                sshagent(credentials:["Github-Web-Key"]) {
+                sshagent(credentials:["github_sakh_mathpar"]) {
+                    sh "git pull origin master"
                     sh "git push origin HEAD:master"
                 }
             }
