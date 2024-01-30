@@ -7,7 +7,7 @@ pipeline {
             steps{
                 script{
                     for(def environment: environments.getList()){
-                        build job: '/Mathpar Calculator/Healthcheck/MonitorApplication', parameters: [[$class: "StringParameterValue", name: "environment", value: environment]], wait: false
+                        build job: '/MathparCalculator/Healthcheck/MonitorApplication', parameters: [[$class: "StringParameterValue", name: "environment", value: environment]], wait: false
                     }
                 }
             }
