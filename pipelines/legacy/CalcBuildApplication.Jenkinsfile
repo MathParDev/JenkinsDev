@@ -47,7 +47,7 @@ pipeline {
         stage('docker'){
             steps{
                 script {
-                    withDockerRegistry(credentialsId: 'Gitlab-Web-Key', url: 'https://registry.gitlab.com') {
+                    withDockerRegistry(credentialsId: 'Gitlab-Serhio-Token', url: 'https://registry.gitlab.com') {
                         sh "docker build -t registry.gitlab.com/mathpar/learning/${params.imageName} ."
                         sh "docker push registry.gitlab.com/mathpar/learning/${params.imageName}"
                     }
